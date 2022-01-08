@@ -297,10 +297,16 @@ class Rx:
 
 
     def algsturm (self):
+        """Determina la sucesión de sturm
+
+        Returns:
+            [list]: sucesión de strum
+        """
         a = self
         c = []
         r = Rx()
         j = 0
+        roots = []
 
         #Se determina la sucesión de Sturm
         c.append(a.copy())
@@ -318,14 +324,6 @@ class Rx:
             if c[i].g<0: H-=1
             else: 
                 if c[i].c[c[i].g]==0.0: H-=1
-    
-        print("La sucesión de Sturm es:\n")
-  
-        for i in range(H+1):
-            print("\nV{}= ".format(i),end="")
-            print(c[i])
-
-        print("\n\n")
   
         cotaS=a.cotasup()
         cotaI=a.cotainf()
@@ -345,13 +343,11 @@ class Rx:
                 if k>=2: paso=paso/2.0
             
             if (c[0].ev(cotaI)>=0.0 and c[0].ev(cotaI+paso)<=0.0) or (c[0].ev(cotaI)<=0.0 and c[0].ev(cotaI+paso)>=0.0):
-                print("\n[{},{}]".format(round(cotaI,3),round(cotaI+paso,3)))
+                roots.append((round(cotaI,3),round(cotaI+paso,3)))
                 j+=1
             
             cotaI=cotaI+paso
-
-        if j==0: print("\nNo tiene raíces reales")
-        return c
+        return c, roots
 
 
     
@@ -364,7 +360,17 @@ class Rx:
 
 a = Rx.leeRx()
 print(a)
-a.algsturm()
+s , r= a.algsturm()
+print("La sucesión de sturm es:")
+for i in range(len(s)):
+    print("V{}={}".format(i,s[i]))
+if len(r)>0:
+    print("\n\nLas raíces están el los siguientes intervalos:")
+    for i in range(len(r)):
+        print("[{},{}]".format(r[i][0],r[i][1]))
+else:
+    print("No tiene raíces reales")
+
     
 
 
