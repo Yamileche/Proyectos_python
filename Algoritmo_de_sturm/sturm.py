@@ -300,7 +300,7 @@ class Rx:
         """Determina la sucesión de sturm
 
         Returns:
-            [list]: sucesión de strum
+            [tuple]: (list= sucesión de strurm (Rx), list = tuplas con las raices) tuple(list(Rx),tuple((float,float)))
         """
         a = self
         c = []
