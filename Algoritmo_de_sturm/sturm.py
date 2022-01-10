@@ -332,6 +332,7 @@ class Rx:
         k=0
         # se construye la tabla se signos del algoritmo
         while cotaI<=cotaS :
+            # paso determina la precision con la que se quieren los intervalos
             paso=0.001;
             while k!=1 and cotaI<=cotaS and ((c[0].ev(cotaI)!=0.0 or c[0].ev(cotaI+paso)!=0.0) and k<=1):
                 k=0
