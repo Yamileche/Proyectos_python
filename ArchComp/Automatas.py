@@ -1,8 +1,7 @@
 import networkx as nx
 import matplotlib.pyplot as plt
-from math import sqrt, atan, sin, cos,pi
+from math import sqrt, atan, sin, cos, pi
 
-input("Ingrese el número")
 
 def rotate(source=(0,0),target=(0,0)):
     lenght=sqrt((source[0]-target[0])**2+(source[1]-target[1])**2)
@@ -67,9 +66,13 @@ class automata:
                         eq1 = lines[l].split(" ")
                         if eq1[-1].find("\n") != -1:
                             eq1[-1] = eq1[-1][:-1]
-                        if int(eq1[1])==1:
+                        if int(eq1[1])==1: #Final
                             self.isfinal.setdefault(eq1[0],True)
-                        else:
+                        elif int(eq1[1])==2:
+                            # Inicial y final
+                            self.isfinal.setdefault(eq1[0],True)
+                            self.initialState = self.initialState.union([eq1[0]]) 
+                        else: #Inicial
                            if int(eq1[1]) == -1:
                                 self.initialState = self.initialState.union([eq1[0]]) 
                            self.isfinal.setdefault(eq1[0],False) 
@@ -116,11 +119,16 @@ class automata:
         """
         """"""
 
-        #
+        #Posiciones de los nodos
+
         #pos = nx.circular_layout(G)
-
-        pos = nx.spring_layout(G)
-
+        #pos = nx.spring_layout(G)
+        #pos = nx.spectral_layout(G)
+        #pos = nx.spiral_layout(G)
+        #pos = nx.shell_layout(G)
+        pos = nx.planar_layout(G)
+        #pos = nx.random_layout(G)
+        
         ax = plt.gca()
 
         for edge in G.edges():
@@ -151,8 +159,12 @@ class automata:
 
         nx.draw_networkx_nodes(G, pos,nodelist=list(self.finalstates),
                 node_color="red")
-        nx.draw_networkx_nodes(G,pos, nodelist=list(self.initialState),
-                node_color="blue")
+        if self.finalstates.intersection(self.initialState) == set():
+            nx.draw_networkx_nodes(G,pos, nodelist=list(self.initialState),
+                    node_color="blue")
+        else:
+            nx.draw_networkx_nodes(G,pos, nodelist=list(self.initialState),
+                    node_color="green")
         nx.draw_networkx_nodes(G,pos, nodelist=list(set(G.nodes).difference(self.finalstates.union(self.initialState))),
                 node_color="black")
         # labels
@@ -171,5 +183,5 @@ class automata:
 
 
 autom1 = automata()
-autom1.leestados(r"ArchComp\autom1.txt")
+autom1.leestados(r"/home/yamilongo/Documentos/GitHub/Proyectos_python/ArchComp/autom1.txt")
 autom1.muestra()
