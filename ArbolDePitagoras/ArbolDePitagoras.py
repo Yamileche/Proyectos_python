@@ -6,59 +6,20 @@ import seaborn as sns
 from math import cos, sin, pi, asin, acos, sqrt
 
 
-global al, theta, gamma, a, l, h, ce, cosg, seng, cost, sent
-l = 1
-h = 1
-a = 0.6
-a = 1/(2*sin(pi/4)) #arbol normal
-grad = 90 * pi/ 180
-al = grad
+global al, theta, gamma, a, l, h, ce, cosg, seng, cost, sent, n, alpha
+l = 0.02
+h = 0.7
+a = 0.9
+#a = 1/(2*sin(pi/4)) #arbol normal ramas simétricas
+grad = 85  # ángulo en grados
 
-#al = acos(1-1/(2*a*a))
-
-theta = asin(sin(al)*a)
-gamma = pi - theta - al
-
-cosg = cos(gamma)
-seng = sin(gamma)
-cost = cos(theta)
-sent = sin(theta)
-
-ce = (seng/sin(al))
-
-global n, alpha
-# Recursiones
-n=6
-n-=1
-alpha = 1
-global MaxV, MinV, MaxH, MinH
-MaxV = h
-MinV = 0
-MaxH = l
-MinH = 0
-
-
-
-
-def f2 (w = [0,0]):
-    x = w[0]
-    y = w[1]
-    return [a*x*cosg-a*y*seng, a*x*seng+a*y*cosg+h]
- 
-def f3 (w = [0,0]):
-    x = w[0]
-    y = w[1]
-    return [-ce*x*cost+ce*y*sent+l, ce*x*sent+ce*y*cost+h]
-
-
-
-
-# Paletas  Magma, Inferno, Plasma, Viridis, Cividis
-paleta = Cividis[11]
+n=12 # Recursiones
 
 # Paletas de Seaborn
-paleta = sns.color_palette("nipy_spectral_r", n_colors=n+1) 
+paleta = sns.color_palette("gray", n_colors=n) 
 
+
+#Listado de paletas
 # 'Accent', 'Accent_r', 'Blues', 'Blues_r', 'BrBG', 'BrBG_r', 'BuGn', 'BuGn_r', 
 # 'BuPu', 'BuPu_r', 'CMRmap', 'CMRmap_r', 'Dark2 ',' Dark2_r ',' GnBu ',' GnBu_r ','
 # Verdes ',' Verdes_r ',' Grises ',' Grises_r ',' OrRd ',' OrRd_r ',' Naranjas ',' Naranjas_r ',
@@ -82,6 +43,40 @@ paleta = sns.color_palette("nipy_spectral_r", n_colors=n+1)
 # ' invierno ',' invierno_r '
 
 
+
+
+
+"No mover lo que sigue"
+
+n-=1
+alpha = 1
+al = grad * pi/ 180
+
+#al = acos(1-1/(2*a*a))
+
+theta = asin(sin(al)*a)
+gamma = pi - theta - al
+
+cosg = cos(gamma)
+seng = sin(gamma)
+cost = cos(theta)
+sent = sin(theta)
+
+ce = (seng/sin(al))
+
+def f2 (w = [0,0]):
+    x = w[0]
+    y = w[1]
+    return [a*x*cosg-a*y*seng, a*x*seng+a*y*cosg+h]
+ 
+def f3 (w = [0,0]):
+    x = w[0]
+    y = w[1]
+    return [-ce*x*cost+ce*y*sent+l, ce*x*sent+ce*y*cost+h]
+
+# Paletas  Magma, Inferno, Plasma, Viridis, Cividis
+# paleta = Cividis[11]
+
 sqare = [[0,0],[l,0], [l,h], [0, h]]
 listPolygons = []
 
@@ -96,9 +91,6 @@ def frac1(m = 0, sqare = [[0,0],[l,0], [l,h], [0, h]]):
     sqare1 = list(map(f2,sqare))
     sqare2 = list(map(f3,sqare))
     
-    
-    
-
     #Cuando se ocupa bokeh
     #color = paleta[m%11]
     
@@ -136,23 +128,18 @@ def frac1(m = 0, sqare = [[0,0],[l,0], [l,h], [0, h]]):
     if m<n:
         frac1(m+1, sqare1)
         frac1(m+1, sqare2)
-        
-
-
-
-        
+          
 fig, ax = plt.subplots(1, 1, figsize=(20,20))
-
-frac1(m = 1, sqare=sqare)
-
+frac1(m = 0, sqare=sqare)
 for polygon in listPolygons:
-    
-
     ax.add_artist(polygon)
     
-    
+
+
+
+
 ax.set_xlim([-3,4])
-ax.set_ylim([0,4])
+ax.set_ylim([-1,3])
 plt.title(""+str(n+1)+" recursiones")
 ax.set_axis_off()
 

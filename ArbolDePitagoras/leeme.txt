@@ -1,0 +1,5 @@
+Este es un programa que dibuja el árbol de pitágoras
+
+Las variables que se pueden modificar son h, l, a y grad donde h es la altura del rectángulo principal, 
+l el hancho del mismo, a es la hanchura de la rama izquierda y grad es el angulo que se forma entre la 
+rama izquierda y derecha. 
