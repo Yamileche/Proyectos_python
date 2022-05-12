@@ -2,21 +2,21 @@ import matplotlib.pyplot as plt
 import numpy as np
 from bokeh.palettes import Magma, Inferno, Plasma, Viridis, Cividis 
 import seaborn as sns
-
 from math import cos, sin, pi, asin, acos, sqrt
 
 
 global al, theta, gamma, a, l, h, ce, cosg, seng, cost, sent, n, alpha
-l = 0.02
-h = 0.7
-a = 0.9
-#a = 1/(2*sin(pi/4)) #arbol normal ramas simétricas
-grad = 85  # ángulo en grados
 
-n=12 # Recursiones
+l = 1
+h = 1
+a = 0.3
+#a = 1/(2*sin(pi/4)) #arbol normal ramas simétricas
+grad = 90 # ángulo en grados
+
+n=3 # Recursiones
 
 # Paletas de Seaborn
-paleta = sns.color_palette("gray", n_colors=n) 
+paleta = sns.color_palette("cividis", n_colors=n+1) 
 
 
 #Listado de paletas
@@ -48,8 +48,9 @@ paleta = sns.color_palette("gray", n_colors=n)
 
 "No mover lo que sigue"
 
-n-=1
+
 alpha = 1
+
 al = grad * pi/ 180
 
 #al = acos(1-1/(2*a*a))
@@ -61,7 +62,12 @@ cosg = cos(gamma)
 seng = sin(gamma)
 cost = cos(theta)
 sent = sin(theta)
-
+Cost = cos(-theta)
+Sent = sin(-theta) 
+MaxV = [h]
+MinV = [0]
+MaxH = [l]
+MinH = [0]
 ce = (seng/sin(al))
 
 def f2 (w = [0,0]):
@@ -72,7 +78,9 @@ def f2 (w = [0,0]):
 def f3 (w = [0,0]):
     x = w[0]
     y = w[1]
-    return [-ce*x*cost+ce*y*sent+l, ce*x*sent+ce*y*cost+h]
+    #return [-ce*x*cost+ce*y*sent+l, ce*x*sent+ce*y*cost+h]
+    
+    return [x*ce*Cost-y*ce*Sent+a*cosg ,x*ce*Sent+y*ce*Cost+a*seng +h]
 
 # Paletas  Magma, Inferno, Plasma, Viridis, Cividis
 # paleta = Cividis[11]
@@ -90,6 +98,28 @@ def frac1(m = 0, sqare = [[0,0],[l,0], [l,h], [0, h]]):
 
     sqare1 = list(map(f2,sqare))
     sqare2 = list(map(f3,sqare))
+
+
+    # Dimensiones de la imagen
+    for v in range(4):
+        if sqare1[v][0]<MinH[0]:
+            MinH[0]=sqare1[v][0]
+        if sqare1[v][0]>MaxH[0]:
+            MaxH[0]=sqare1[v][0]
+        if sqare2[v][0]<MinH[0]:
+            MinH[0]=sqare2[v][0]
+        if sqare2[v][0]>MaxH[0]:
+            MaxH[0]=sqare2[v][0]
+        
+        if sqare1[v][1]<MinV[0]:
+            MinV[0]=sqare1[v][1]
+        if sqare1[v][1]>MaxV[0]:
+            MaxV[0]=sqare1[v][1]
+        if sqare2[v][1]<MinV[0]:
+            MinV[0]=sqare2[v][1]
+        if sqare2[v][1]>MaxV[0]:
+            MaxV[0]=sqare2[v][1]
+        
     
     #Cuando se ocupa bokeh
     #color = paleta[m%11]
@@ -98,8 +128,9 @@ def frac1(m = 0, sqare = [[0,0],[l,0], [l,h], [0, h]]):
     color = paleta[m]
     
     #Para los colores tipo arbol
+
     """
-     if m >5:
+    if m >5:
         vertex = np.array(sqare1)
         polygon = plt.Polygon(vertex, edgecolor = "green", facecolor = "peru", alpha = alpha)
         listPolygons.append(polygon)
@@ -122,29 +153,22 @@ def frac1(m = 0, sqare = [[0,0],[l,0], [l,h], [0, h]]):
     vertex = np.array(sqare2)
     polygon = plt.Polygon(vertex, color = color, alpha = alpha)
     listPolygons.append(polygon)
-
+    
 
 
     if m<n:
         frac1(m+1, sqare1)
         frac1(m+1, sqare2)
           
+
 fig, ax = plt.subplots(1, 1, figsize=(20,20))
 frac1(m = 0, sqare=sqare)
 for polygon in listPolygons:
     ax.add_artist(polygon)
     
-
-
-
-
-ax.set_xlim([-3,4])
-ax.set_ylim([-1,3])
-plt.title(""+str(n+1)+" recursiones")
+ax.set_xlim([MinH[0],MaxH[0]])
+ax.set_ylim([MinV[0],MaxV[0]])
+plt.title(""+str(n)+" recursiones")
 ax.set_axis_off()
 
 plt.show()
-
-
-
- 

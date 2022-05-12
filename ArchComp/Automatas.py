@@ -56,6 +56,10 @@ class automata:
         self.isfinal = dict()
         self.finalstates = set()
         self.initialState = set()
+        self.BStates = set()
+        self.alphabet = list()
+        self.SystemEq = dict()
+        self.__auxAutom = nx.DiGraph()
 
     def leestados(self, archivo=""):
         """Lee los estados y acomoda la información
@@ -66,9 +70,17 @@ class automata:
         if self.state == []:
             f = open(archivo)
             states = []
+            statesAux = []
             lines = f.readlines()
             num = len(lines)
-            l = 0
+            l = 1
+
+            eq = lines[0].split(" ")
+            if eq[-1].find("\n") != -1:
+                eq[-1] = eq[-1][:-1]
+
+            self.alphabet = eq   #Obteniendo el alfabeto
+
             k = False
             while l < num:
                 eq = lines[l].split(" ")
@@ -83,8 +95,10 @@ class automata:
                             h = True  # Se coloca aquí en caso de que esté la arista
                             if not eq[2] in i[2]:  # Si no está el peso se agrega
                                 i[2].append(eq[2])
+                                
 
                     if not h:  # Si aún no se agrega la arista con el peso
+                        statesAux.append(tuple(eq))
                         eq[2] = [eq[2]]
                         states.append(tuple(eq))
                     l += 1
@@ -114,26 +128,33 @@ class automata:
                 if value:
                     self.finalstates = self.finalstates.union(set([key]))
             self.automata.add_weighted_edges_from(states)
-            self.state = states
+            self.__auxAutom.add_weighted_edges_from(statesAux)
+            self.state = states 
+            self.BStates = set(self.automata.nodes).difference(self.finalstates.union(self.initialState)) #Nodos que no son finales ni iniciales
+
 
     def muestra(self):
         """Grafica el gráfo donde los nodos rojos son los estoados finales
+            azul es el estado inicial y si resulta ser que el estado inicial
+            es final éste se pinta de verde
         """
         G = self.automata
-
+        G1 = self.__auxAutom
         # Posiciones de los nodos
 
-        pos = nx.circular_layout(G)
-        #pos = nx.spring_layout(G)
-        #pos = nx.spectral_layout(G)
-        #pos = nx.spiral_layout(G)
-        #pos = nx.shell_layout(G)
-        #pos = nx.planar_layout(G)
-        #pos = nx.random_layout(G)
+        #pos = nx.circular_layout(G1)
+        pos = nx.spring_layout(G1)
+        #pos = nx.spectral_layout(G1)
+        #pos = nx.spiral_layout(G1)
+        #pos = nx.shell_layout(G1)
+        
+        #pos = nx.planar_layout(G1)
+        #pos = nx.random_layout(G1)
         
         
         #plt.figure(figsize=(10,10))
-        ax = plt.gca()
+        #ax = plt.gca()
+        fig, ax = plt.subplots(1, 1, figsize=(5,5))
 
         # Dibuja las aristas
         for edge in G.edges():
@@ -243,7 +264,33 @@ class automata:
                 if node == i[0]:
                     for weight in i[2]:
                         lista.append((i[1],weight))
-            self.eq.setdefault(node,lista)      
+            self.eq.setdefault(node,lista)
+
+        for key, value in self.eq.items():  # Por si hay nodos que no tienen sucesores se pone por   
+            auxlist2 = list()               # defecto ellos mismos como sucesores para cualquier
+            if value == list():             # letra del alfabeto
+                auxlist = dict()  
+                auxlist3 = list()  #Aquí se guardan las tuplas
+                for i in self.alphabet:
+                    auxlist3.append((key,i))
+                auxlist.update({key:auxlist3})
+                
+                auxlist2.append(auxlist.copy())
+        
+        if auxlist2 != list():
+            for i in auxlist2:
+                self.eq.update(i)  
+
+
+        for key, value in self.eq.items(): # Se crea un diccionario con los strings de las ecuaciones
+            k = len(value)
+            l = ""
+            for i in range(k):
+                s = "("+ str(value[i][1])+")" + str(value[i][0]+" ")
+                l += s 
+            self.SystemEq.update({key:l.split(" ")[0:-1]})
+
+            
             
     def muestra_eq(self):
         """_Muestra las ecuaciones
@@ -252,14 +299,16 @@ class automata:
             self.__equations()
         print("\nEl sistema de ecuaciones es: \n")
         for key, value in self.eq.items():
-            print(key,end=" = ")
+            print(key,end="=")
             k = len(value)
             for i in range(k):
-                s = "("+ str(value[i][1])+")" + str(value[i][0]) 
+                s = "("+ str(value[i][1])+")" + str(value[i][0])
+  
                 if i == k-1:
                     print(s)
                 else:
-                    print(s+" + ",end="")
+                    print(s+"+",end="")
+
     
     def acepta(self,word = ""):
         if self.eq == dict():
@@ -308,16 +357,32 @@ class automata:
                     return True
         
         return False
+    
+    def regularExpresiion(self):
+        if self.eq == dict():
+            self.__equations()
+        G = self.automata
+        st = [] #Esta lista contiene los estados en orden: inicial, normal, final
+        for i in self.initialState:
+            st.append(i)
+        for i in self.BStates:
+            st.append(i)
+        for i in self.finalstates.difference(self.initialState):
+            st.append(i)
+        print(self.SystemEq)
+
+        
         
 
 
 autom1 = automata()
 autom1.leestados(
-    r"C:\Users\yamil\OneDrive\Documentos\GitHub\Proyectos_python\ArchComp\autom1.txt")
+    r"/home/yamilongo/Documentos/OneDrive/Documentos/GitHub/Proyectos_python/ArchComp/autom1.txt")
 #autom1.muestra_eq()
-if autom1.acepta("1 0 0 0 1 0 0 1"):
-    print("La palabra es aceptada")
-else:
-    print("La palabra no es aceptada")
-  
-autom1.muestra()
+autom1.regularExpresiion()
+#if autom1.acepta("0 0 0 0 0 0 1 1 0 1"):
+#    print("La palabra es aceptada")
+#else:
+#    print("La palabra no es aceptada")
+#autom1.regularExpresiion()
+#autom1.muestra()
