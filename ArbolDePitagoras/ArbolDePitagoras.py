@@ -7,13 +7,13 @@ from math import cos, sin, pi, asin, acos, sqrt
 
 global al, theta, gamma, a, l, h, ce, cosg, seng, cost, sent, n, alpha
 
-l = 1
+l = 0.002
 h = 1
-a = 0.3
+a = 0.2
 #a = 1/(2*sin(pi/4)) #arbol normal ramas simétricas
-grad = 90 # ángulo en grados
+grad = 45 # ángulo en grados
 
-n=3 # Recursiones
+n=12 # Recursiones
 
 # Paletas de Seaborn
 paleta = sns.color_palette("cividis", n_colors=n+1) 
@@ -79,8 +79,7 @@ def f3 (w = [0,0]):
     x = w[0]
     y = w[1]
     #return [-ce*x*cost+ce*y*sent+l, ce*x*sent+ce*y*cost+h]
-    
-    return [x*ce*Cost-y*ce*Sent+a*cosg ,x*ce*Sent+y*ce*Cost+a*seng +h]
+    return [x*ce*Cost-y*ce*Sent+a*l*cosg ,x*ce*Sent+y*ce*Cost+a*l*seng+h]
 
 # Paletas  Magma, Inferno, Plasma, Viridis, Cividis
 # paleta = Cividis[11]
