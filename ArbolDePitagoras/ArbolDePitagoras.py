@@ -7,16 +7,16 @@ from math import cos, sin, pi, asin, acos, sqrt
 
 global al, theta, gamma, a, l, h, ce, cosg, seng, cost, sent, n, alpha
 
-l = 0.002
-h = 1
-a = 0.2
+l = 1 
+h = 1       
+a = 1  
 #a = 1/(2*sin(pi/4)) #arbol normal ramas simétricas
-grad = 45 # ángulo en grados
+grad = 60 # ángulo en grados 
 
-n=12 # Recursiones
+n=10 # Recursiones
 
 # Paletas de Seaborn
-paleta = sns.color_palette("cividis", n_colors=n+1) 
+paleta = sns.color_palette("RdBu", n_colors=n+1)
 
 
 #Listado de paletas

@@ -1,0 +1,57 @@
+Este programa trabaja con la tabla de transiciones de un AFN
+
+Se obtiene la expresión regular, si una palabra está en el lenguaje asociado al autómata,
+la gráfica del autómata y el sistema de ecuaciones
+
+Para ingresar un AFN se necesita ingresarlo mediante un .txt con el
+siguiente formato
+
+Alfabeto
+# estados
+estado1 num (num int/ -1 estado inicial, 1 estado final, 2 estado inicial y final y 0 en otro caso)
+estadoFuente estadoObjetivo letraDeTransición
+
+Ejemplo:
+//////////////////////////////////////////////////////////////
+1 0
+4
+q0 -1
+q1 1
+q2 0
+q3 0
+q0 q1 0
+q0 q2 1
+q1 q1 0
+q1 q2 1
+q2 q1 1
+q2 q3 0
+q3 q3 1
+q3 q2 0
+//////////////////////////////////////////////////////////////
+Nota: No dejar espacios en blanco después de cada línea
+Nota: Se encuentran más ejemplos en éste mismo git
+
+
+*******Para obtener los datos********
+Para generar un objeto de la clase automata
+autom = automata()
+
+Para leer del documento .txt
+autom.leestados(r"direccion_del_archivo/archivo.txt")
+
+
+Obtener la expresión degular
+print(autom1.regularExpresiion())
+
+Obtener el sistema de ecuaciones
+print(autom1.muestra_eq())
+
+Para saber si una palabra está en el lenguaje (separar cada letra por un espacio, 
+regresa True o False)
+autom1.acepta("1 0 1 0 1 0 0 1")
+
+Para obtener la gráfica (se tienen 7 posibles disposiciones para los estados (del 0 al 6),
+poner la deseada en number=) 
+
+autom1.muestra(number=1)
+
