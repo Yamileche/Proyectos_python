@@ -51,7 +51,8 @@ regresa True o False)
 autom1.acepta("1 0 1 0 1 0 0 1")
 
 Para obtener la gráfica (se tienen 7 posibles disposiciones para los estados (del 0 al 6),
-poner la deseada en number=) 
+poner la deseada en number=) Azul: estado inicial, rojo: estado final, verde: estado inicial y final
+negro: ni final ni inicial
 
 autom1.muestra(number=1)
 
