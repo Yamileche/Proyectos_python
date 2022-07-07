@@ -1,0 +1,6 @@
+Este programa resuelve el problema del caballo de ajedrez
+
+Nota: Si se escoge un tamaño impar favor de no poner como 
+casilla inicial una casilla blanca pues en esas casillas no existe solución
+
+Para información del algoritmo empleado ingresar a http://www.din.uem.br/sbpo/sbpo2012/pdf/arq0509.pdf

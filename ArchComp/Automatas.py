@@ -374,20 +374,27 @@ class automata:
     def acepta(self,word = ""):
         if self.eq == dict():
             self.__equations()
+        word = word.strip()
         word = word.split(" ")
         
         for node in self.initialState: #Tuve que poner bucle para poder obtener el punico elemento en el conjunto
             EsIn = node
-        if self.eq[EsIn] == []: # No tiene conexiones con otros nodos
+            
+        if EsIn in self.isfinal and word[0] == "": # Acepta palabras vacías si el estado inicial es final
+            return True
+        elif not EsIn in self.isfinal and word[0] == "": # Acepta palabras vacías si el estado inicial es final
             return False
+        elif self.eq[EsIn] == []: # No tiene conexiones con otros nodos
+            return False
+ 
         
         n=0
         
         if len(word) == 1:
-            if EsIn in self.finalstates:
-                if (EsIn,word[0]) in self.eq[EsIn]:
-                    return True
-            return False
+            if (EsIn,word[0]) in self.eq[EsIn]:
+                return True
+            else:
+                return False
         
         letra = word[n]
         
@@ -667,22 +674,21 @@ class automata:
 
 
 
-"""
+
 autom1 = automata()
 autom1.leestados(
-    r"direccion_del_archivo/archivo.txt")
+    r"Ejemplos_de_entradas\ending0101.txt")
 print("La expresión regular es: ")
 print(autom1.regularExpresiion())
 
 print("\n\nEl sistema de ecuaciones es: ")
 print(autom1.muestra_eq())
 
-if autom1.acepta("1 0 1 0 1 0 0 1"):
+if autom1.acepta("1 0 1 0 1 0 1 1 1 1 0 1 1 0 0 1 0 1 1 1 0 1 0 1"):
     print("\n\nLa palabra es aceptada")
 else:
     print("\n\nLa palabra no es aceptada")
-
-print("\n\n")
+#print("\n\n")
 # Posiciones del 0 al 6
 autom1.muestra(number=1)
-"""
+

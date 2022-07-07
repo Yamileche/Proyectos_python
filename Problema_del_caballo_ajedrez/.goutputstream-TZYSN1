@@ -1,0 +1,104 @@
+from copy import deepcopy
+
+global size, Bool
+size = 6
+Bool = False
+
+tablero = list()
+
+row = list()
+x = 3
+y = 3
+
+for i in range(size):
+	row.append(0)
+for i in range(size):
+	tablero.append(row.copy())
+x-=1
+y-=1
+tablero[y][x] = 1
+solutions = list()
+	
+def muestra(tab = list()):
+	if tab == list():
+		return none
+	for i in range(size):
+		for j in range(size):
+			print(str(tab[i][j]).ljust(4), end = "")
+		print()
+		
+		
+def nextPos(lista = list()):
+    hor = lista[0]
+    ver = lista[1]
+    return sorted([[hor+i, ver+j] for i in [-2, 2, 1, -1] for j in [-1, 1, 2, -2] if abs(i)!=abs(j) and hor+i >=0 and hor+i<size and ver+j>=0 and ver+j<size])
+
+def copia(tab = list()):
+	
+	ttab = list()
+
+	for i in range(size):
+		tabb.append(row.copy())
+	for	i in range(size):
+		for i in range(size):
+			print()
+
+def control(tab = tablero, pos = [0,0], num = 2):
+	global Bool
+	print("\n\n", Bool)
+	if num > size*size or Bool:
+		return None
+		
+	next = nextPos(pos)
+	
+	print("\n\n Cambio", next)
+	print("\n\nEntra")
+	if len(next) > 0:
+		for i in next:
+			print("\n\n", i, pos)
+			if Bool:
+				break
+			if tab[i[1]][i[0]] != 0:
+				print("\n\nNo pasó")
+				continue
+			tabaux = deepcopy(tab)
+			tabaux[i[1]][i[0]] = num
+			print("\n\n", num, next)
+			muestra(tabaux)
+			if num == size*size:
+				Bool = True
+				print("llegó")
+				tablero = tabaux
+				solutions.append(deepcopy(tabaux))
+				return None
+			control(tab = tabaux, pos = i, num = num+1)
+
+	print("\nVacío")
+
+muestra(tablero)
+
+control(pos = [x,y])
+muestra(solutions[0])
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+
